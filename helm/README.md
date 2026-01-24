@@ -119,6 +119,53 @@ helm install traefik traefik/traefik --dry-run
 helm install traefik traefik/traefik --dry-run --debug
 ```
 
+## Upgrade Releases
+
+```bash
+# Upgrade release
+helm upgrade metrics-server metrics-server/metrics-server -n kube-system
+
+## Upgrade to Specific Version
+helm upgrade metrics-server metrics-server/metrics-server -n kube-system --version 3.12.2
+
+# Upgrade with inline values
+helm upgrade metrics-server metrics-server/metrics-server -n kube-system --set replicas=2
+
+# Upgrade release with new values
+helm upgrade metrics-server metrics-server/metrics-server -n kube-system --values values.yaml
+
+# Upgrade and rollback on failure
+helm upgrade metrics-server metrics-server/metrics-server -n kube-system --atomic
+
+# Upgrade and wait for completion
+helm upgrade metrics-server metrics-server/metrics-server -n kube-system --wait --timeout 5m
+
+# Dry run upgrade
+helm upgrade metrics-server metrics-server/metrics-server -n kube-system --dry-run
+
+# Force update (recreate pods)
+helm upgrade metrics-server metrics-server/metrics-server -n kube-system --force
+
+# Upgrade and install if not exists
+helm upgrade --install metrics-server metrics-server/metrics-server -n kube-system
+```
+
+## Rollback
+
+```bash
+# Check upgrade history
+helm history metrics-server -n kube-system
+
+# Rollback to previous release
+helm rollback metrics-server -n kube-system
+
+# Rollback to specific revision
+helm rollback metrics-server -n kube-system 1
+
+# Rollback with cleanup hooks
+helm rollback metrics-server -n kube-system 1 --cleanup-on-fail
+```
+
 ## Download to Current Directory
 
 ```bash
@@ -156,6 +203,12 @@ helm package my-chart
 
 # Validate chart syntax
 helm lint traefik
+
+```bash
+# Template rendering (dry run)
+helm template metrics-server metrics-server/metrics-server
+helm template metrics-server metrics-server/metrics-server --set replicas=2
+helm template metrics-server metrics-server/metrics-server --values values.yaml
 ```
 
 ## Release Management
