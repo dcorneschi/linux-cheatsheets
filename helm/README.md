@@ -166,6 +166,19 @@ helm rollback metrics-server -n kube-system 1
 helm rollback metrics-server -n kube-system 1 --cleanup-on-fail
 ```
 
+## Uninstall
+
+```bash
+# Uninstall release
+helm uninstall metrics-server
+
+# Uninstall from specific namespace
+helm uninstall metrics-server -n kube-system
+
+# Keep release history (soft delete)
+helm uninstall metrics-server -n kube-system --keep-history
+```
+
 ## Download to Current Directory
 
 ```bash
@@ -202,13 +215,21 @@ helm create my-chart
 helm package my-chart
 
 # Validate chart syntax
-helm lint traefik
+helm lint my-chart
 
-```bash
+# Validate chart values
+helm lint my-chart --values values.yaml
+
 # Template rendering (dry run)
 helm template metrics-server metrics-server/metrics-server
 helm template metrics-server metrics-server/metrics-server --set replicas=2
 helm template metrics-server metrics-server/metrics-server --values values.yaml
+
+# Template with debug values
+helm template metrics-server metrics-server/metrics-server --debug
+
+# Template to file
+helm template metrics-server metrics-server/metrics-server > metrics-server-rendered.yaml
 ```
 
 ## Release Management
@@ -242,6 +263,9 @@ helm get values argo -n argo --all
 # Get release manifest (rendered YAML)
 helm get manifest argo -n argo
 
+# Get manifest at specific revision
+helm get manifest metrics-server -n kube-system --revision 2
+
 # Get release notes
 helm get notes argo -n argo
 
@@ -251,6 +275,9 @@ helm get all argo -n argo
 # Show release history
 helm history argo -n argo
 helm history argo -n argo --output json
+
+# Compare releases
+helm diff revision metrics-server -n kube-system 1 2        # (requires helm-diff plugin)
 ```
 
 ## View Helm Environment Variables
